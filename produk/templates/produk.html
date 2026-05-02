@@ -2,119 +2,484 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Daftar Produk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produk — LUXE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --dark: #1a2a1e;
+            --forest: #2d4a35;
+            --light: #f5f3ef;
+            --warm: #ede9e2;
+            --text: #2a2a2a;
+            --muted: #7a7a7a;
+            --border: rgba(0,0,0,0.08);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f4f6f9;
+            font-family: 'Jost', sans-serif;
+            background: var(--light);
+            color: var(--text);
+            font-weight: 300;
+            overflow-x: hidden;
         }
 
+        /* ── NAV ── */
         nav {
-            background: #2c3e50;
-            padding: 15px;
-            text-align: center;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 22px 56px;
+            background: rgba(245,243,239,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
         }
 
-        nav a {
-            color: white;
-            margin: 0 15px;
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            color: var(--dark);
             text-decoration: none;
-            font-weight: bold;
         }
 
-        .container {
-            padding: 40px;
-            text-align: center;
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
         }
 
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 30px;
+        .nav-links a {
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text);
+            font-weight: 400;
+            position: relative;
+            padding-bottom: 3px;
         }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 1px;
+            background: var(--dark);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .nav-links a.active::after,
+        .nav-links a:hover::after { transform: scaleX(1); }
+
+        /* ── PAGE HEADER ── */
+        .page-header {
+            padding: 120px 56px 40px;
+            animation: fadeUp 0.7s ease both;
+        }
+
+        .page-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 400;
+            color: var(--dark);
+            margin-bottom: 14px;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.7;
+            max-width: 440px;
+        }
+
+        /* ── FILTER BAR ── */
+        .filter-bar {
+            padding: 32px 56px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            animation: fadeUp 0.7s 0.1s ease both;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        .filter-tab {
+            padding: 8px 18px;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            font-family: 'Jost', sans-serif;
+            font-weight: 400;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            border-radius: 2px;
+            transition: all 0.25s;
+        }
+
+        .filter-tab.active {
+            background: var(--dark);
+            color: white;
+            border-color: var(--dark);
+        }
+
+        .filter-tab:not(.active):hover { border-color: rgba(0,0,0,0.25); }
+
+        .sort-control { display: flex; align-items: center; gap: 12px; }
+
+        .sort-label {
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .sort-select {
+            font-family: 'Jost', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--dark);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            padding-right: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%231a2a1e' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0 center;
+        }
+
+        /* ── PRODUCT GRID ── */
+        .product-section { padding: 48px 56px 60px; }
 
         .produk-list {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px 28px;
         }
 
         .card {
-            background: white;
-            width: 250px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-            transition: 0.3s;
+            cursor: pointer;
+            animation: fadeUp 0.6s ease both;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card img {
+        .product-thumb {
             width: 100%;
-            height: 160px;
-            object-fit: cover;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            background: var(--warm);
+            margin-bottom: 16px;
+            position: relative;
         }
 
-        .card-body {
-            padding: 15px;
+        .product-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .card:hover .product-thumb img { transform: scale(1.06); }
+
+        .product-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(26,42,30,0);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 20px;
+            transition: background 0.35s;
+        }
+
+        .card:hover .product-overlay { background: rgba(26,42,30,0.18); }
+
+        .btn {
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: white;
+            background: var(--dark);
+            padding: 10px 22px;
+            font-family: 'Jost', sans-serif;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.3s, transform 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .card:hover .btn { opacity: 1; transform: translateY(0); }
+
+        .product-category {
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--dark);
+            margin-bottom: 8px;
+            line-height: 1.2;
         }
 
         .harga {
-            color: #27ae60;
-            font-weight: bold;
+            font-size: 13px;
+            color: var(--text);
+            font-weight: 400;
+            letter-spacing: 0.04em;
         }
 
-        .btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 15px;
-            background: #3498db;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-        }
-
-        footer {
-            margin-top: 50px;
+        /* Empty state */
+        .empty-state {
             text-align: center;
-            padding: 20px;
-            background: #2c3e50;
-            color: white;
+            padding: 80px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 56px;
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            color: var(--dark);
+            margin-bottom: 6px;
+        }
+
+        .footer-copy { font-size: 11px; color: var(--muted); }
+
+        .footer-links { display: flex; flex-wrap: wrap; gap: 6px 28px; }
+
+        .footer-links a {
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover { color: var(--dark); }
+
+        .footer-social { display: flex; gap: 16px; }
+
+        .footer-social a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 16px;
+            transition: opacity 0.2s;
+        }
+        .footer-social a:hover { opacity: 0.5; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            nav { padding: 18px 24px; }
+            .nav-links { gap: 24px; }
+            .page-header { padding: 100px 24px 30px; }
+            .filter-bar { padding: 24px 24px 20px; }
+            .product-section { padding: 30px 24px 40px; }
+            .produk-list { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+            footer { padding: 30px 24px; }
+        }
+
+        @media (max-width: 550px) {
+            .produk-list { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
+<!-- NAVBAR -->
 <nav>
-    <a href="/">Home</a>
-    <a href="/produk/">Produk</a>
-    <a href="/kontak/">Kontak</a>
+    <a href="/" class="nav-logo">LUXE</a>
+    <ul class="nav-links">
+        <li><a href="/">Beranda</a></li>
+        <li><a href="/produk/" class="active">Produk</a></li>
+        <li><a href="/kontak/">Kontak</a></li>
+    </ul>
 </nav>
 
-<div class="container">
-    <h1>Daftar Produk</h1>
+<!-- PAGE HEADER -->
+<div class="page-header">
+    <h1 class="page-title">Koleksi Terkurasi</h1>
+    <p class="page-subtitle">Kebutuhan esensial pilihan untuk hunian modern, di mana desain minimalis bertemu dengan keahlian yang luar biasa.</p>
+</div>
 
-    <div class="produk-list">
-        {% for p in produk %}
-            <div class="card">
-                <img src="{{ p.gambar }}" alt="{{ p.nama }}">
-                <div class="card-body">
-                    <h3>{{ p.nama }}</h3>
-                    <p class="harga">Rp{{ p.harga }}</p>
-                    <a href="/produk/{{ p.id }}/" class="btn">Lihat Detail</a>
-                </div>
-            </div>
-        {% endfor %}
+<!-- FILTER BAR -->
+<div class="filter-bar">
+    <div class="filter-tabs">
+        <button class="filter-tab active" data-kategori="semua" onclick="filterKategori(this, 'semua')">Semua Produk</button>
+        <button class="filter-tab" data-kategori="FURNITUR" onclick="filterKategori(this, 'FURNITUR')">Furnitur</button>
+        <button class="filter-tab" data-kategori="PENCAHAYAAN" onclick="filterKategori(this, 'PENCAHAYAAN')">Pencahayaan</button>
+        <button class="filter-tab" data-kategori="DEKORASI" onclick="filterKategori(this, 'DEKORASI')">Dekorasi</button>
+        <button class="filter-tab" data-kategori="TEKSTIL" onclick="filterKategori(this, 'TEKSTIL')">Tekstil</button>
+    </div>
+    <div class="sort-control">
+        <span class="sort-label">Urutkan:</span>
+        <select class="sort-select" onchange="sortKartu(this.value)">
+            <option value="default">Terbaru</option>
+            <option value="harga-asc">Harga ↑ (Termurah)</option>
+            <option value="harga-desc">Harga ↓ (Termahal)</option>
+            <option value="nama">Nama A–Z</option>
+        </select>
     </div>
 </div>
 
+<!-- PRODUCT GRID -->
+<section class="product-section">
+    <div class="produk-list" id="productGrid">
+        {% for p in produk %}
+        <div class="card"
+             data-id="{{ p.id }}"
+             data-harga="{{ p.harga }}"
+             data-nama="{{ p.nama }}"
+             data-kategori="{{ p.kategori }}"
+             data-gambar="{{ p.gambar }}"
+             data-deskripsi="{{ p.deskripsi }}">
+
+            <div class="product-thumb">
+                <img src="{{ p.gambar }}" alt="{{ p.nama }}" loading="lazy" onerror="this.src='https://placehold.co/600x450/e2e3e0/2b4d44?text=LUXE'">
+                <div class="product-overlay">
+                    <a href="/produk/{{ p.id }}/" class="btn">Lihat Detail</a>
+                </div>
+            </div>
+
+            <p class="product-category">{{ p.kategori }}</p>
+            <h3>{{ p.nama }}</h3>
+            <p class="harga">Rp {{ p.harga|floatformat:"0" }}</p>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            <p>Belum ada produk tersedia.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- FOOTER -->
 <footer>
-    <p>© 2026 Website Katalog</p>
+    <div class="footer-inner">
+        <div>
+            <div class="footer-logo">LUXE</div>
+            <p class="footer-copy">© 2026 LUXE Curated Goods. All rights reserved.</p>
+        </div>
+        <div class="footer-links">
+            <a href="#">Kebijakan Privasi</a>
+            <a href="#">Syarat &amp; Ketentuan</a>
+            <a href="#">Pengiriman &amp; Pengembalian</a>
+            <a href="#">Keberlanjutan</a>
+            <a href="#">Jurnal</a>
+        </div>
+        <div class="footer-social">
+            <a href="#">↗</a>
+            <a href="#">✉</a>
+        </div>
+    </div>
 </footer>
+
+<script>
+    // Stagger animasi kartu
+    function applyStagger() {
+        document.querySelectorAll('.card').forEach((card, i) => {
+            if (card.style.display !== 'none') {
+                card.style.animation = 'none';
+                card.offsetHeight;
+                card.style.animation = `fadeUp 0.5s ${i * 60}ms ease both`;
+            }
+        });
+    }
+
+    // Filter kategori
+    function filterKategori(btn, kategori) {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        
+        let visible = 0;
+        document.querySelectorAll('.card').forEach(card => {
+            const cardKategori = card.dataset.kategori;
+            const match = kategori === 'semua' || cardKategori === kategori;
+            card.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        
+        applyStagger();
+    }
+
+    // Sort kartu
+    function sortKartu(mode) {
+        const grid = document.getElementById('productGrid');
+        const cards = Array.from(grid.querySelectorAll('.card'));
+        
+        cards.sort((a, b) => {
+            if (mode === 'harga-asc') return parseInt(a.dataset.harga) - parseInt(b.dataset.harga);
+            if (mode === 'harga-desc') return parseInt(b.dataset.harga) - parseInt(a.dataset.harga);
+            if (mode === 'nama') return a.dataset.nama.localeCompare(b.dataset.nama, 'id');
+            return 0;
+        });
+        
+        cards.forEach((card, i) => {
+            card.style.animation = 'none';
+            grid.appendChild(card);
+            card.offsetHeight;
+            card.style.animation = `fadeUp 0.4s ${i * 50}ms ease both`;
+        });
+    }
+
+    // Inisialisasi animasi saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', function() {
+        applyStagger();
+    });
+    
+    // Event listener untuk kartu klik (opsional: langsung ke detail)
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            // Hindari klik jika yang diklik adalah tombol detail
+            if (e.target.classList && e.target.classList.contains('btn')) return;
+            const id = this.dataset.id;
+            if (id) window.location.href = `/produk/${id}/`;
+        });
+    });
+</script>
 
 </body>
 </html>

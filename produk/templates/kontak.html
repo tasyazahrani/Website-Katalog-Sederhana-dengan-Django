@@ -2,97 +2,633 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Kontak</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontak — LUXE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --dark: #1a2a1e;
+            --forest: #2d4a35;
+            --sage: #4a6b52;
+            --light: #f5f3ef;
+            --warm: #ede9e2;
+            --text: #2a2a2a;
+            --muted: #7a7a7a;
+            --accent: #c8a96e;
+            --card-bg: #f5f3ef;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f4f6f9;
+            font-family: 'Jost', sans-serif;
+            background: var(--light);
+            color: var(--text);
+            font-weight: 300;
+            overflow-x: hidden;
         }
 
+        /* ── NAVBAR (SAMA DENGAN HOME) ── */
         nav {
-            background: #2c3e50;
-            padding: 15px;
-            text-align: center;
-        }
-
-        nav a {
-            color: white;
-            margin: 0 15px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .container {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
             display: flex;
-            justify-content: center;
-            margin-top: 80px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 22px 56px;
+            background: rgba(245,243,239,0.94);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
         }
 
-        .card {
-            background: white;
-            width: 400px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            padding: 25px;
-            text-align: center;
-        }
-
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-
-        .info {
-            font-size: 16px;
-            margin: 10px 0;
-            color: #555;
-        }
-
-        .btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #3498db;
-            color: white;
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            color: var(--dark);
             text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text);
+            font-weight: 400;
+            position: relative;
+            padding-bottom: 3px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a.active::after,
+        .nav-links a:hover::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 1px;
+            background: var(--dark);
+        }
+
+        /* ── HERO ── */
+        .hero {
+            padding: 120px 56px 48px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+        .hero p {
+            font-size: 14px;
+            line-height: 1.75;
+            color: var(--muted);
+            max-width: 480px;
+        }
+
+        /* ── MAIN GRID ── */
+        .contact-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 56px 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* ── FORM CARD ── */
+        .form-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 48px 48px 52px;
+        }
+        .form-card h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            font-weight: 400;
+            margin-bottom: 32px;
+            color: var(--dark);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full { grid-column: 1 / -1; }
+
+        .form-group label {
+            font-size: 10px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+        .form-group input,
+        .form-group textarea {
+            background: white;
+            border: 1px solid var(--border);
             border-radius: 8px;
+            padding: 14px 16px;
+            font-family: 'Jost', sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--text);
+            outline: none;
+            transition: border-color .2s;
+            resize: none;
         }
-
-        .btn:hover {
-            background: #2980b9;
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--dark);
         }
+        .form-group textarea { height: 120px; }
 
-        footer {
-            margin-top: 100px;
-            text-align: center;
-            padding: 20px;
-            background: #2c3e50;
+        .btn-submit {
+            margin-top: 24px;
+            padding: 14px 32px;
+            background: var(--dark);
             color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Jost', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .btn-submit:hover {
+            background: var(--forest);
+            transform: translateY(-1px);
+        }
+
+        /* ── RIGHT COLUMN ── */
+        .right-col { display: flex; flex-direction: column; gap: 16px; }
+
+        /* Store image card */
+        .store-img-card {
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+            height: 220px;
+        }
+        .store-img-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .store-img-overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 20px 24px;
+            background: linear-gradient(to top, rgba(0,0,0,.55) 0%, transparent 100%);
+        }
+        .store-img-overlay p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 400;
+            color: white;
+        }
+
+        /* Info card */
+        .info-card {
+            background: var(--dark);
+            border-radius: 14px;
+            padding: 32px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+        .info-row { display: flex; align-items: flex-start; gap: 16px; }
+        .info-icon {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .info-icon svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent);
+        }
+        .info-text { flex: 1; }
+        .info-label {
+            font-size: 10px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.5);
+            margin-bottom: 6px;
+        }
+        .info-value {
+            font-size: 14px;
+            line-height: 1.6;
+            color: white;
+            font-weight: 300;
+        }
+
+        /* Map card */
+        .map-card {
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+            height: 160px;
+            background: #ddd;
+        }
+        .map-card iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            filter: grayscale(30%);
+        }
+        .map-btn {
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            color: var(--dark);
+            border: none;
+            border-radius: 40px;
+            padding: 10px 18px;
+            font-family: 'Jost', sans-serif;
+            font-size: 12px;
+            letter-spacing: .08em;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 400;
+            transition: background .2s;
+            box-shadow: 0 2px 12px rgba(0,0,0,.15);
+        }
+        .map-btn:hover { background: var(--light); }
+        .map-btn svg { width: 14px; height: 14px; }
+
+        /* ── SOCIAL SECTION ── */
+        .social-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 56px 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        .social-text h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 400;
+            margin-bottom: 6px;
+            color: var(--dark);
+        }
+        .social-text p {
+            font-size: 13px;
+            color: var(--muted);
+        }
+        .social-icons { display: flex; gap: 12px; }
+        .social-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--dark);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background .2s;
+            text-decoration: none;
+        }
+        .social-icon:hover { background: var(--forest); }
+        .social-icon svg { width: 18px; height: 18px; }
+
+        /* ── FOOTER (SAMA DENGAN HOME) ── */
+        footer {
+            padding: 80px 56px 40px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            padding-bottom: 60px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .footer-brand-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            color: var(--dark);
+            margin-bottom: 16px;
+        }
+
+        .footer-brand-text {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.7;
+            max-width: 220px;
+        }
+
+        .footer-col h4 {
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--dark);
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .footer-col ul { list-style: none; }
+
+        .footer-col ul li { margin-bottom: 12px; }
+
+        .footer-col ul li a {
+            font-size: 13px;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-col ul li a:hover { color: var(--dark); }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-bottom p {
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+        }
+
+        .footer-bottom-right {
+            display: flex;
+            gap: 30px;
+        }
+
+        .footer-bottom-right span {
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+        }
+
+        /* ── ANIMATION ── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .hero      { animation: fadeUp .5s ease both; }
+        .form-card { animation: fadeUp .5s ease .1s both; }
+        .right-col { animation: fadeUp .5s ease .15s both; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            nav { padding: 18px 24px; }
+            .nav-links { gap: 24px; }
+            .hero { padding: 100px 24px 40px; }
+            .contact-grid {
+                grid-template-columns: 1fr;
+                padding: 0 24px 60px;
+            }
+            .form-card { padding: 32px 24px; }
+            .form-row { grid-template-columns: 1fr; }
+            .social-section {
+                flex-direction: column;
+                gap: 24px;
+                padding: 0 24px 60px;
+                text-align: center;
+            }
+            footer { padding: 60px 24px 30px; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+        }
+
+        @media (max-width: 550px) {
+            .footer-grid { grid-template-columns: 1fr; gap: 30px; text-align: center; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+            .footer-bottom-right { justify-content: center; }
         }
     </style>
 </head>
 <body>
 
+<!-- NAVBAR (SAMA DENGAN HOME) -->
 <nav>
-    <a href="/">Home</a>
-    <a href="/produk/">Produk</a>
-    <a href="/kontak/">Kontak</a>
+    <a href="/" class="nav-logo">LUXE</a>
+    <ul class="nav-links">
+        <li><a href="/">Beranda</a></li>
+        <li><a href="/produk/">Produk</a></li>
+        <li><a href="/kontak/" class="active">Kontak</a></li>
+    </ul>
 </nav>
 
-<div class="container">
-    <div class="card">
-        <h1>Kontak Kami</h1>
+<!-- HERO -->
+<div class="hero">
+    <h1>Hubungi Kami</h1>
+    <p>Kami di sini untuk membantu pengalaman terkurasi Anda. Baik Anda memiliki pertanyaan tentang koleksi kami atau butuh bantuan dengan pesanan, tim kami siap melayani Anda.</p>
+</div>
 
-        <p class="info">📧 Email: contoh@email.com</p>
-        <p class="info">📱 WhatsApp: 08123456789</p>
+<!-- CONTACT GRID -->
+<div class="contact-grid">
 
-        <a href="/" class="btn">Kembali ke Home</a>
+    <!-- FORM -->
+    <div class="form-card">
+        <h2>Kirim Pesan</h2>
+        <form method="post" action="/kontak/">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nama">Nama</label>
+                    <input type="text" id="nama" name="nama" placeholder="Nama Anda" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="hello@luxe.com" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group full">
+                    <label for="pesan">Pesan</label>
+                    <textarea id="pesan" name="pesan" placeholder="Bagaimana kami bisa membantu Anda hari ini?" required></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">Kirim Pertanyaan</button>
+        </form>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+
+        <!-- Store Image -->
+        <div class="store-img-card">
+            <img src="https://sawdust.co.id/cdn/shop/articles/output-onlinepngtools_2.png?v=1731393400&width=1200" alt="Toko Luxe">
+            <div class="store-img-overlay">
+                <p>Kunjungi Toko Pusat Kami</p>
+            </div>
+        </div>
+
+        <!-- Info Card -->
+        <div class="info-card">
+            <div class="info-row">
+                <div class="info-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                </div>
+                <div class="info-text">
+                    <p class="info-label">Lokasi</p>
+                    <p class="info-value">Jl. Teuku Nyak Arief No. 88<br>Ulee Kareng, Banda Aceh 23116<br>Indonesia</p>
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="info-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.7A16 16 0 0 0 15.3 16l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                </div>
+                <div class="info-text">
+                    <p class="info-label">Pertanyaan</p>
+                    <p class="info-value">+62 21 555-0198</p>
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="info-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                </div>
+                <div class="info-text">
+                    <p class="info-label">Jam Operasional</p>
+                    <p class="info-value">Sen–Jum: 10.00 – 20.00<br>Sab–Min: 11.00 – 18.00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Card -->
+        <div class="map-card">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31769.056152893114!2d95.32757232288043!3d5.547437143694487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30403779c2a85035%3A0x65acac030a448aae!2sKec.%20Ulee%20Kareng%2C%20Kota%20Banda%20Aceh%2C%20Aceh!5e0!3m2!1sid!2sid!4v1777719615508!5m2!1sid!2sid"
+                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <a href="https://maps.google.com" target="_blank" class="map-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                </svg>
+                Buka di Peta
+            </a>
+        </div>
+
     </div>
 </div>
 
+<!-- SOCIAL SECTION -->
+<div class="social-section">
+    <div class="social-text">
+        <h3>Ikuti Perjalanan Kami</h3>
+        <p>Dapatkan pembaruan terkini tentang koleksi dan acara kami.</p>
+    </div>
+    <div class="social-icons">
+        <a href="#" class="social-icon" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/>
+            </svg>
+        </a>
+        <a href="#" class="social-icon" aria-label="Share">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="18" cy="5" r="3"/>
+                <circle cx="6" cy="12" r="3"/>
+                <circle cx="18" cy="19" r="3"/>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+        </a>
+        <a href="#" class="social-icon" aria-label="Website">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+        </a>
+    </div>
+</div>
+
+<!-- FOOTER (SAMA DENGAN HOME) -->
 <footer>
-    <p>© 2026 Website Katalog</p>
+    <div class="footer-grid">
+        <div>
+            <div class="footer-brand-logo">LUXE</div>
+            <p class="footer-brand-text">Meningkatkan kehidupan sehari-hari melalui objek kurasi dengan desain luar biasa dan kualitas yang tahan lama.</p>
+            <div style="display:flex;gap:14px;margin-top:24px;">
+                <a href="#" style="color:var(--muted);font-size:16px;text-decoration:none;">◉</a>
+                <a href="#" style="color:var(--muted);font-size:16px;text-decoration:none;">◈</a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Belanja</h4>
+            <ul>
+                <li><a href="/produk/">Semua Produk</a></li>
+                <li><a href="/produk/">Kedatangan Baru</a></li>
+                <li><a href="/produk/">Produk Terlaris</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Perusahaan</h4>
+            <ul>
+                <li><a href="#">Keberlanjutan</a></li>
+                <li><a href="#">Jurnal</a></li>
+                <li><a href="#">Tentang Kami</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Layanan</h4>
+            <ul>
+                <li><a href="#">Pengiriman &amp; Pengembalian</a></li>
+                <li><a href="#">Kebijakan Privasi</a></li>
+                <li><a href="#">Syarat &amp; Ketentuan</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&#169; 2026 LUXE Barang Kurasi. Hak cipta dilindungi undang-undang.</p>
+        <div class="footer-bottom-right">
+            <span>Pengiriman Global Tersedia</span>
+            <span>Pembayaran Aman</span>
+        </div>
+    </div>
 </footer>
 
 </body>
